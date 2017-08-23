@@ -80,11 +80,13 @@ class BOAdminToolsParser():
         
         return fold_df.apply(_build_folder_path, axis=1)
 
-    def frame_from_file(self, fn):
+    def frame_from_file(self, fn, **fopen_args):
         '''
         Parameters:
         -----------
         fn : filename to be parsed
+        **fopen_args : keyword arguments to be passed to the open
+                built-in function along with the filename
 
         Returns:
         --------
@@ -93,7 +95,7 @@ class BOAdminToolsParser():
 
         # Speed up processing by only looking at tables, trs, tds
         only_boe_tags = SoupStrainer(['table', 'td', 'tr'])
-        with open(fn) as infile:
+        with open(fn, **fopen_args) as infile:
             soup = BeautifulSoup(infile, 'lxml', parse_only=only_boe_tags)
 
         # Filter on border attr to strip out tables that aren't report entries

@@ -133,16 +133,16 @@ The output of any AdminTools query in Business Objects looks as follows:
 
 The BOAdminToolsParser class contained within the BOATParser module uses BeautifulSoup to parse and focus just on table elements (this can greatly improve performance for large documents). Each table is converted into a dict entry, where the key is the first column and the value is the second. After parsing the entire file, the class converts the dict into a DataFrame, where each table parsed becomes its own record. The value in the first table column maps to the column name of the DataFrame, and the second column from the table becomes the value.
 
-In cases where tables are nested (see SI_PATH in the test.html table provided) the BOAdminToolsParser class will parse recursively. The value for that given entry becomes a nested dict.
+In cases where tables are nested (see SI_PATH in the test.html table provided) the BOAdminToolsParser class will parse recursively. The value for that given entry becomes a nested dict. The class also provides a convenience function called `expand_paths`. Using the example above, after parsing it into a DataFrame you can call that function to get the full file path of a given record.
 
-The BOAdminToolsParser class also provides a convenience function called `expand_paths`. Using the example above, after parsing it into a DataFrame you can call that function to get the full file path of a given record.
+The `frame_from_file` method may also accept an arbirtrary number of keyword arguments to be passed to Python's built-in `open` command. This may be especially useful if the encoding of the file you are trying to parse differs from the default system encoding.
 
 Bringing this altogether, here's are the steps for parsing the above table::
 
   from BOATParser import BOAdminToolsParser
 
   bp = BOAdminToolsParser()
-  df = bp.frame_from_file('test.html')
+  df = bp.frame_from_file('test.html', encoding='utf-8')
   df['expanded_path'] = bp.expand_paths(df)
 
 Yielding the following DataFrame:

@@ -5,7 +5,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
     README = readme.read()
 
 setup(name='BOATParser',
-      version='0.1',
+      version='0.1.1',
       description='Business Objects Admin Tools Parser',
       long_descfription=README,
       author='Will Ayd',
