@@ -13,7 +13,7 @@ Installation
 2. Build the source distribution and install via pip::
 
      python setup.py sdist
-     pip install dist/BOATParser-0.1.tar.gz
+     pip install dist/BOATParser-X.Y.tar.gz
 
 3. Run any query in the AdminTools of your Business Objects environment. After the query completes, do a "Save As" on the page and be sure to save the page source locally.
 

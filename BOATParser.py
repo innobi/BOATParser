@@ -1,5 +1,5 @@
 import pandas as pd
-from bs4 import BeautifulSoup, SoupStrainer
+from lxml import etree
 
 class BOAdminToolsParser():
     '''
@@ -25,22 +25,22 @@ class BOAdminToolsParser():
         second column contains an HTML table, this function will call itself
         recursively, providing a dict inside of a dict
         '''
-        if table.name != 'table': # Sanity check
+        if table.tag != 'table': # Sanity check
             raise Exception
 
         parsed_dict = dict()
-        for tr in table.find_all('tr', recursive=False):
-            # Ignore header rows
-            if 'header' in tr.get_attribute_list('class'):
-                continue
+        for tr in table.xpath('tr'): # Get child tr elements
+            if tr.get("class") == "header":
+                continue  # Ignore header rows
 
             # Map first two columns to key / value
-            col1, col2 = tr.find_all('td', recursive=False, limit=2)
-
+            key, val = tr.xpath('td[position()<=2]')
+            
             # If the second column contains a table, call recursively
-            val = self._dict_from_table(col2.table) if col2.table else col2.text
+            subtable = val.xpath('table[1]')
+            val_text = self._dict_from_table(subtable[0]) if subtable else val.text
 
-            parsed_dict[col1.text] = val
+            parsed_dict[key.text] = val_text
 
         return parsed_dict
 
@@ -97,14 +97,12 @@ class BOAdminToolsParser():
         '''
 
         # Speed up processing by only looking at tables, trs, tds
-        only_boe_tags = SoupStrainer(['table', 'td', 'tr'])
-        with open(fn, **fopen_args) as infile:
-            soup = BeautifulSoup(infile, 'lxml', parse_only=only_boe_tags)
+        parser = etree.HTMLParser()
+        tree = etree.parse(fn, parser)
 
-        # Filter on border attr to strip out tables that aren't report entries
-        tables = soup.find_all('table', recursive=False, attrs={
-            'border' : '1'
-            })
+        # Every report is contained within a table with a border value of 1
+        # Use xpath to find any without an ancestor (at top of document)
+        tables = tree.xpath('//table[@border="1" and not(ancestor::table)]')
 
         parsed = dict()
         for index, table in enumerate(tables):
