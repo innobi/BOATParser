@@ -4,6 +4,12 @@ BOATParser
 
 BOATParser (Business Objects AdminTools Parser) allows you to take the output of queries run in AdminTools and convert them into a pandas DataFrame. This facilitatates analysis of your metadata and also allows you to easily output that information into common sharable formats like csv and Excel.
 
+If you are new to Python and need a more in-depth walk through of how to use this, feel free to reference my posting on the |SAP Community website|.
+
+.. |SAP Community website| raw:: html
+
+   <a href="https://blogs.sap.com/2017/08/27/converting-admintools-data-into-a-reportable-format/" target="_blank">SAP Community website</a>
+
 
 Installation
 ------------
