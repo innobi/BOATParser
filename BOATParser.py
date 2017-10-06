@@ -76,6 +76,9 @@ class BOAdminToolsParser():
             # Add in name of current folder object
             fps.append(nm)
 
+            # Add in blank entry at beginning, so join returns leading slash
+            fps.insert(0, '')
+            
             return '/'.join(fps)
         
         return fold_df.apply(_build_folder_path, axis=1)
